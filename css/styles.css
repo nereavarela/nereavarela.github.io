@@ -1,0 +1,417 @@
+/* =========================================================
+   1. VARIABLES — tu sistema de diseño
+   ========================================================= */
+:root {
+  --bg: #141b26;                       /* azul-gris oscuro de base */
+  --ink: #e4e6e1;                      /* texto */
+  --dim: rgba(228, 230, 225, .55);     /* texto secundario */
+  --line: rgba(228, 230, 225, .25);    /* líneas divisorias */
+  --accent: #a9b8c8;                   /* acento */
+  --glass: rgba(20, 27, 38, .45);      /* "cristal" del contenido */
+  --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --pad: clamp(16px, 2.5vw, 40px);     /* margen lateral */
+  --gap: clamp(14px, 1.5vw, 24px);     /* separación entre columnas */
+  --ease: cubic-bezier(.22, .9, .3, 1);
+   --ease: cubic-bezier(.22, .9, .3, 1);
+  --text-scale: 1.37;                  /* 1 = tamaño actual · 1.15 = 15 % más grande */
+    --nav-size: clamp(30px, 1.75vw, 35px);   /* tamaño del texto del menú de la portada (independiente) */
+}
+
+/* =========================================================
+   2. RESET
+   ========================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: calc(clamp(16px, calc(12px + .5vw), 26px) * var(--text-scale));
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+
+/* =========================================================
+   3. FONDO GLOBAL — degradado gris que se queda en toda la web
+      y se mueve muy despacio
+   ========================================================= */
+body::before {
+  content: "";
+  position: fixed;          /* fijo: no se mueve al hacer scroll */
+  inset: -15%;              /* más grande que la pantalla para poder moverse */
+  z-index: -1;              /* detrás de todo */
+  background:
+    radial-gradient(ellipse 35% 30% at 72% 38%, rgba(165, 175, 185, .55), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 18% 28%, rgba(150, 155, 160, .5), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 30% 85%, rgba(125, 130, 135, .4), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 60% 60%, rgba(55, 70, 92, .7), transparent 70%),
+    var(--bg);
+  filter: blur(20px);
+  animation: drift 40s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-6%, 4%, 0) scale(1.12); }
+}
+
+/* =========================================================
+   4. UTILIDADES
+   ========================================================= */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.big { font-size: clamp(1.9rem, calc(3.4vw * var(--text-scale)), 4rem); line-height: 1.05; letter-spacing: -.04em; }
+.label {
+  display: block;
+  font-size: .875rem;
+  color: var(--dim);
+  margin-bottom: .4rem;
+}
+
+/* =========================================================
+   5. PORTADA
+   ========================================================= */
+.hero {
+  position: sticky;          /* se queda pegada arriba */
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.hero-name {
+  position: absolute;
+  z-index: 1;
+  font-size: 16vw;
+  line-height: 1;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+}
+.hero-name--1 { left: -.02em; top: -.12em; }
+.hero-name--2 { right: .02em; bottom: -.17em; }
+
+.hero-nav {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: var(--pad);
+  right: var(--pad);
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: .5em;
+  font-size: var(--nav-size);     /* ← solo depende de su variable */
+  letter-spacing: -.01em;
+}
+.hero-nav a { transition: opacity .3s; }
+.hero-nav a:hover { opacity: .6; }
+.hero-nav a.is-active::before {
+  content: "";
+  display: inline-block;
+  width: .45em;
+  height: .45em;
+  margin-right: .45em;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: .1em;
+}
+
+.hero-copy {
+  position: absolute;
+  z-index: 2;
+  left: var(--pad);
+  bottom: 14px;
+  font-size: .75rem;
+}
+
+/* =========================================================
+   6. CONTENIDO — "hoja de cristal" que sube sobre la portada
+   ========================================================= */
+.page {
+  position: relative;
+  z-index: 3;                                  /* por encima de la portada */
+  background: var(--glass);                    /* semitransparente: se ve el gris */
+  backdrop-filter: blur(40px) saturate(120%);  /* desenfoca lo que hay debajo */
+  -webkit-backdrop-filter: blur(40px) saturate(120%);
+  border-top: 1px solid var(--line);
+}
+
+section { padding: 12vh var(--pad); }
+
+h2 {
+  font-size: clamp(2.6rem, calc(7vw * var(--text-scale)), 7rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.05em;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+/* =========================================================
+   7. CONTACTO
+   ========================================================= */
+.contact-panel .big {
+  max-width: 22ch;
+  border-top: 1px solid var(--line);
+  padding-top: 1.6rem;
+}
+
+.contact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap);
+  margin-top: 10vh;
+}
+.contact-list li {
+  border-top: 1px solid var(--line);
+  padding-top: .6rem;
+}
+.contact-list .label { display: block; }
+.contact-list a {
+  font-size: clamp(1.1rem, calc(1.6vw * var(--text-scale)), 1.6rem);
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;   /* que el email largo no se salga */
+  transition: color .3s;
+}
+.contact-list a:hover { color: var(--accent); }
+
+/* =========================================================
+   8. WHO AM I — texto a la izquierda, foto a la derecha
+   ========================================================= */
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto 1fr;        /* la última fila absorbe el alto de la foto */
+  column-gap: clamp(32px, 6vw, 120px);      /* aire entre texto y foto */
+  align-items: start;
+}
+.about h2 { grid-column: 1 / -1; }          /* el título ocupa las 2 columnas */
+.about .big { grid-column: 1; max-width: 18ch; }
+.about > p:not(.big) {
+  grid-column: 1;
+  max-width: 42ch;
+  margin-top: 2.5rem;
+  font-size: clamp(1.05rem, calc(1.3vw * var(--text-scale)), 1.4rem);
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+.about figure {
+  grid-column: 2;
+  grid-row: 2 / span 2;                     /* a la derecha del texto */
+  justify-self: end;
+  width: min(100%, 1500px);                  /* más grande: hasta 720px */
+  margin-right: clamp(0px, 5vw, 110px);     /* aire respecto al borde de la página */
+  margin-top: 1rem;
+  aspect-ratio: hidden;                     
+  overflow: hidden;
+}
+.about figure img {
+  width: block;
+  height: 100%;
+  object-fit: auto;                       
+}
+
+/* =========================================================
+   9. EDUCATION & TRAINING
+   ========================================================= */
+.education {
+  --edu-scale: 1.3;                          /* 1 = tamaño original · 1.3 = 30 % más grande */
+  font-size: calc(1rem * var(--edu-scale));
+}
+.education h2 { font-size: clamp(2.6rem, calc(7vw * var(--text-scale)), 7rem); }
+
+   .edu-item {
+  display: grid;
+  grid-template-columns: 1fr 3fr;           /* fecha | contenido */
+  column-gap: var(--gap);
+  border-top: 1px solid var(--line);
+  padding: 1.6rem 0 2.4rem;
+}
+.edu-item > * { grid-column: 2; }
+.edu-item .edu-date {
+  grid-column: 1;
+  grid-row: 1 / span 20;
+  color: var(--dim);
+}
+.edu-item h3 + .edu-place + h3 { margin-top: 1em; }   /* dos títulos en el mismo bloque (idiomas) */
+.edu-place { color: var(--dim); margin-top: .3rem; }
+
+.coursework-title {
+  margin-top: 1.8rem;
+  margin-bottom: .8rem;
+  font-size: .8125rem;
+  font-weight: 400;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.coursework { max-width: 70ch; margin-top: 1rem; }
+.coursework li {
+  position: relative;
+  padding-left: 1.2em;
+  margin-bottom: .7em;
+  line-height: 1.5;
+}
+.coursework li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .6em;
+  width: .35em;
+  height: .35em;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.coursework strong { font-weight: 600; }
+
+/* =========================================================
+   10. INTERESTS — tres columnas
+   ========================================================= */
+.interest-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap);
+}
+.interest-list li {
+  border-top: 1px solid var(--line);
+  padding-top: .8rem;
+}
+.interest-list h3 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -.03em;
+  margin-bottom: .6rem;
+}
+.interest-list p { color: var(--dim); max-width: 32ch; }
+.more { margin-top: 1rem; }
+.more summary {
+  cursor: pointer;
+  list-style: none;              /* quita el triángulo por defecto */
+  font-size: .875rem;
+  color: var(--accent);
+}
+.more summary::-webkit-details-marker { display: none; }  /* triángulo en Safari */
+/* Texto del botón: "Read more" cerrado, "Read less" abierto */
+.more .when-open { display: none; }
+.more[open] .when-open { display: inline; }
+.more[open] .when-closed { display: none; }
+/*+ y - del read more y read less*/
+.more summary::after { content: " +"; }
+.more[open] summary::after { content: " −"; }
+.more p { margin-top: .8rem; color: var(--dim); max-width: 46ch; }
+.more a { text-decoration: underline; text-underline-offset: 2px; }
+/* =========================================================
+   11. PIE
+   ========================================================= */
+.footer {
+  padding: 10vh var(--pad) 2rem;
+  border-top: 1px solid var(--line);
+  font-size: .8125rem;
+  overflow: hidden;
+}
+.giant {
+  font-size: 13vw;
+  line-height: .9;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+  margin-bottom: 2rem;
+}
+
+/* =========================================================
+   12. MÓVIL
+   ========================================================= */
+@media (max-width: 860px) {
+  .hero-name { font-size: 20vw; }
+  .hero-nav { flex-wrap: wrap; gap: .4rem 1.2rem; justify-content: flex-start; }
+
+  .contact-list,
+  .interest-list { grid-template-columns: 1fr 1fr; }
+
+  .about { grid-template-columns: 1fr; }
+  .about figure { grid-column: 1; grid-row: auto; justify-self: start; margin: 2.5rem 0 0; width: min(100%, 420px); }
+
+  .edu-item { grid-template-columns: 1fr; }
+  .edu-item .edu-date { grid-row: auto; margin-bottom: .4rem; }
+  .edu-item > * { grid-column: 1; }
+}
+
+@media (max-width: 520px) {
+  .contact-list,
+  .interest-list { grid-template-columns: 1fr; }
+}
+
+/* Si la persona tiene desactivadas las animaciones en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  html { scroll-behavior: auto; }
+}
+/* =========================================================
+   13. LIGHTBOX — imagen ampliada sobre la página
+   ========================================================= */
+.lightbox {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  padding: var(--pad);
+  background: transparent;
+  color: var(--ink);
+}
+.lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  animation: lb-in .35s var(--ease);
+}
+.lightbox::backdrop {
+  background: rgba(10, 13, 18, .75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.lightbox[open]::backdrop { animation: lb-fade .35s ease; }
+
+.lightbox-img {
+  max-width: min(var(--lb-width, 1100px), 100%);  /* ancho máximo: personalizable por imagen */
+  max-height: var(--lb-height, 85vh);              /* alto máximo: personalizable por imagen */
+  object-fit: contain;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+}
+.lightbox-caption { color: var(--dim); font-size: .875rem; }
+
+.lightbox-close {
+  position: fixed;
+  top: var(--pad);
+  right: var(--pad);
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(20, 27, 38, .6);
+  color: var(--ink);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .3s, transform .3s var(--ease);
+}
+.lightbox-close:hover { background: rgba(228, 230, 225, .15); transform: rotate(90deg); }
+
+body:has(.lightbox[open]) { overflow: hidden; }
+
+@keyframes lb-in   { from { opacity: 0; transform: scale(.97); } }
+@keyframes lb-fade { from { opacity: 0; } }
