@@ -13,8 +13,8 @@
   --gap: clamp(14px, 1.5vw, 24px);     /* separación entre columnas */
   --ease: cubic-bezier(.22, .9, .3, 1);
    --ease: cubic-bezier(.22, .9, .3, 1);
-  --text-scale: 1.37;                  /* 1 = tamaño actual · 1.15 = 15 % más grande */
-    --nav-size: clamp(30px, 1.75vw, 35px);   /* tamaño del texto del menú de la portada (independiente) */
+  --text-scale: 0.7;                  /* 1 = tamaño actual · 1.15 = 15 % más grande */
+    --nav-size: clamp(14px, 1.1vw, 20px);  /* tamaño del texto del menú de la portada (independiente) */
 }
 
 /* =========================================================
@@ -227,10 +227,10 @@ h2 {
    9. EDUCATION & TRAINING
    ========================================================= */
 .education {
-  --edu-scale: 1.3;                          /* 1 = tamaño original · 1.3 = 30 % más grande */
+  --edu-scale: 1;                          /* 1 = tamaño original · 1.3 = 30 % más grande */
   font-size: calc(1rem * var(--edu-scale));
 }
-.education h2 { font-size: clamp(2.6rem, calc(7vw * var(--text-scale)), 7rem); }
+.education h2 { font-size: clamp(2.4rem, calc(7vw * var(--text-scale)), 6rem); }
 
    .edu-item {
   display: grid;
